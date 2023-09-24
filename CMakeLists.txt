@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.26.4)
+project(tictactoe)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_COMPILER "/usr/bin/clang")
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.c)
+add_executable(tictactoe ${SRC_FILES})
+target_sources(tictactoe PUBLIC "${PROJECT_BINARY_DIR}/src/main.c")
+target_include_directories(tictactoe
+  PUBLIC "${PROJECT_BINARY_DIR}/include"
+)

@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/steve/Projects/tictactoe",
+  "command": "/usr/bin/clang  -I/home/steve/Projects/tictactoe/include -g -std=gnu17 -o CMakeFiles/tictactoe.dir/src/main.c.o -c /home/steve/Projects/tictactoe/src/main.c",
+  "file": "/home/steve/Projects/tictactoe/src/main.c",
+  "output": "CMakeFiles/tictactoe.dir/src/main.c.o"
+},
+{
+  "directory": "/home/steve/Projects/tictactoe",
+  "command": "/usr/bin/clang  -I/home/steve/Projects/tictactoe/include -g -std=gnu17 -o CMakeFiles/tictactoe.dir/src/tictactoe.c.o -c /home/steve/Projects/tictactoe/src/tictactoe.c",
+  "file": "/home/steve/Projects/tictactoe/src/tictactoe.c",
+  "output": "CMakeFiles/tictactoe.dir/src/tictactoe.c.o"
+}
+]
