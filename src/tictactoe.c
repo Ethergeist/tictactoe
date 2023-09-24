@@ -1,5 +1,4 @@
 #include "tictactoe.h"
-#include <stdint.h>
 
 void generateBoard() {
   for (uint32_t y = 0; y < TTT_MAX_BOARD_SIZE; y++) {
@@ -42,8 +41,8 @@ void generateLines() {
   for (uint32_t i = 0; i < game.size; i++) {
     topLeftToBottomRight.empty[i] = (TTT_Position){.y = i, .x = i};
     topLeftToBottomRight.positions[i] = (TTT_Position){.y = i, .x = i};
-    bottomLeftToTopRight.empty[i] = (TTT_Position){.y = game.size - i, .x = i};
-    bottomLeftToTopRight.positions[i] = (TTT_Position){.y = game.size - i, .x = i};
+    bottomLeftToTopRight.empty[i] = (TTT_Position){.y = (game.size - 1) - i, .x = i};
+    bottomLeftToTopRight.positions[i] = (TTT_Position){.y = (game.size -1) - i, .x = i};
   }
   game.lines[numLines++] = topLeftToBottomRight;
   game.lines[numLines] = bottomLeftToTopRight;
@@ -108,8 +107,8 @@ void getComputerInput(uint32_t player, uint32_t round) {
     }
   }
   game.board[playerMove.y][playerMove.x] = game.players[player].character;
-  wprintf(L"%lc chose %d, %d.\n", game.players[player].character, playerMove.x + 1,
-          playerMove.y + 1);
+  wprintf(L"%lc chose %d, %d.\n", game.players[player].character, playerMove.y + 1,
+          playerMove.x + 1);
 }
 
 void getHumanInput(uint32_t player) {
@@ -129,7 +128,7 @@ void getHumanInput(uint32_t player) {
     }
     game.board[playerMove.y][playerMove.x] = game.players[player].character;
     wprintf(L"%lc chose %d, %d.\n", game.players[player].character,
-            playerMove.x + 1, playerMove.y + 1);
+            playerMove.y + 1, playerMove.x + 1);
     break;
   }
 }
@@ -228,8 +227,8 @@ void runGame() {
   uint32_t round = 1;
   TTT_GAME_STATUS status = IN_PLAY;
   generateBoard();
+  printBoard();
   while (status == IN_PLAY) {
-    printBoard();
     wprintf(L"%lc's Turn,\n", game.players[currentPlayer].character);
     switch (game.players[currentPlayer].type) {
     case HUMAN:
@@ -239,6 +238,7 @@ void runGame() {
       getComputerInput(currentPlayer, round);
       break;
     }
+    printBoard();
     status = getUpdateGameStatus();
     if (status == IN_PLAY) {
       currentPlayer = currentPlayer == 0 ? 1 : 0;
