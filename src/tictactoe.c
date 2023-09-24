@@ -198,21 +198,15 @@ void printBoard() {
       x_coordinates[x] = '\0';
       x_border[x] = '\0';
     }
-    x_coordinates[x] = (x + 1) + '0';
+    x_coordinates[x] = (x + 1) + L'\uFF10';
     x_border[x] = HORIZONTAL_SEPARATOR_CHAR;
   }
   x_coordinates[game.size] = '\0';
   x_border[game.size] = '\0';
-  wprintf(L" %lc%ls%lc\n", VERTICAL_SEPARATOR_CHAR, x_coordinates,
-          VERTICAL_SEPARATOR_CHAR);
-  wprintf(L" %lc%ls%lc\n", CROSS_SEPARATOR_CHAR, x_border,
-          CROSS_SEPARATOR_CHAR);
+  wprintf(L"  %ls\n", x_coordinates);
   for (int y = 0; y < game.size; y++) {
-    wprintf(L"%d%lc%ls%lc\n", (y + 1), VERTICAL_SEPARATOR_CHAR, game.board[y],
-            VERTICAL_SEPARATOR_CHAR);
+    wprintf(L"%lc%ls\n", (y + 1) + L'\uFF10', game.board[y]);
   }
-  wprintf(L" %lc%ls%lc\n", CROSS_SEPARATOR_CHAR, x_border,
-          CROSS_SEPARATOR_CHAR);
 }
 
 void printOptions() {
