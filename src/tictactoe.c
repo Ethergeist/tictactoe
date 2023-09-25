@@ -1,4 +1,5 @@
 #include "tictactoe.h"
+#include <stdint.h>
 
 void generateBoard() {
   for (uint32_t y = 0; y < TTT_MAX_BOARD_SIZE; y++) {
@@ -62,14 +63,21 @@ void generateWeights() {
   game.players[1].weights[middle][middle] = 5;
   for (uint32_t ln = 0; ln < game.size + game.size + 2; ln++) {
     TTT_Line line = game.lines[ln];
+    for(uint32_t p = 0; p < game.size; p++) {
+      TTT_Position pos = line.positions[p];
+      if(game.board[pos.y][pos.x] != EMPTY_CHAR) {
+        game.players[0].weights[pos.y][pos.x] = 0;
+        game.players[1].weights[pos.y][pos.x] = 0;
+      }
+    }
     if (line.numEmpty == 1) {
       if (line.numX == (game.size - 1)) {
-        game.players[0].weights[line.empty[0].y][line.empty[0].x] = 25;
+        game.players[0].weights[line.empty[0].y][line.empty[0].x] = 27;
         game.players[1].weights[line.empty[0].y][line.empty[0].x] = 20;
       }
       if (line.numO == (game.size - 1)) {
         game.players[0].weights[line.empty[0].y][line.empty[0].x] = 20;
-        game.players[1].weights[line.empty[0].y][line.empty[0].x] = 25;
+        game.players[1].weights[line.empty[0].y][line.empty[0].x] = 27;
       }
     }
     if (line.numX == 0 || line.numO == 0) {
@@ -77,11 +85,11 @@ void generateWeights() {
         TTT_Position emptyPos = line.empty[ep];
         if (line.numX > 0) {
           game.players[0].weights[emptyPos.y][emptyPos.x] += line.numX;
-          game.players[1].weights[emptyPos.y][emptyPos.x] += (line.numX / 2);
+          game.players[1].weights[emptyPos.y][emptyPos.x] += line.numX * 2;
         }
         if (line.numO > 0) {
           game.players[1].weights[emptyPos.y][emptyPos.x] += line.numO;
-          game.players[0].weights[emptyPos.y][emptyPos.x] += (line.numO / 2);
+          game.players[0].weights[emptyPos.y][emptyPos.x] += line.numO * 2;
         }
       }
     }
@@ -152,13 +160,7 @@ char *getInput(char regexString[25], uint32_t length, wchar_t prompt[120],
 }
 
 TTT_GAME_STATUS getUpdateGameStatus() {
-  uint32_t totalEmptyPositions = 0;
-  for(uint32_t y = 0; y < game.size; y++) {
-    for(uint32_t x = 0; x < game.size; x++) {
-      if(game.board[y][x] == EMPTY_CHAR)
-        totalEmptyPositions++;
-    }
-  }
+  uint32_t unwinnableLines = 0;
   for (uint32_t ln = 0; ln < game.size + game.size + 2; ln++) {
     game.lines[ln].numX = 0;
     game.lines[ln].numO = 0;
@@ -183,8 +185,11 @@ TTT_GAME_STATUS getUpdateGameStatus() {
     if (game.lines[ln].numO == game.size) {
       return O_WINS;
     }
+    if (game.lines[ln].numX > 0 && game.lines[ln].numO > 0) {
+      unwinnableLines++;
+    }
   }
-  if (totalEmptyPositions == 0) {
+  if (unwinnableLines == (game.size * 2) + 2) {
     return DRAW;
   }
   return IN_PLAY;
@@ -217,7 +222,7 @@ void printOptions() {
 }
 
 void runGame() {
-  uint32_t currentPlayer = 0;
+  uint32_t currentPlayer = rand() % 2;
   uint32_t round = 1;
   TTT_GAME_STATUS status = IN_PLAY;
   generateBoard();
